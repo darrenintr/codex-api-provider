@@ -1,0 +1,64 @@
+[server]
+host = "127.0.0.1"
+port = 8765
+request_timeout_seconds = 180
+
+[gateway]
+default_provider = "openrouter"
+
+[providers.openrouter]
+type = "openrouter"
+base_url = "https://openrouter.ai/api/v1"
+api_key_env = "OPENROUTER_API_KEY"
+management_key_env = "OPENROUTER_MANAGEMENT_API_KEY"
+wire_api = "responses"
+quota_kind = "openrouter"
+
+[providers.deepseek]
+type = "deepseek"
+base_url = "https://api.deepseek.com"
+api_key_env = "DEEPSEEK_API_KEY"
+wire_api = "responses"
+quota_kind = "deepseek"
+
+[providers.groq]
+type = "groq"
+base_url = "https://api.groq.com/openai/v1"
+api_key_env = "GROQ_API_KEY"
+wire_api = "chat"
+quota_kind = "rate_headers"
+
+[providers.anthropic]
+type = "generic"
+base_url = "https://api.anthropic.com/v1"
+api_key_env = "ANTHROPIC_API_KEY"
+wire_api = "chat"
+quota_kind = "rate_headers"
+
+[providers.gemini]
+type = "generic"
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+api_key_env = "GEMINI_API_KEY"
+wire_api = "chat"
+quota_kind = "unknown"
+
+[providers.xai]
+type = "generic"
+base_url = "https://api.x.ai/v1"
+api_key_env = "XAI_API_KEY"
+wire_api = "responses"
+quota_kind = "unknown"
+
+[providers.mistral]
+type = "generic"
+base_url = "https://api.mistral.ai/v1"
+api_key_env = "MISTRAL_API_KEY"
+wire_api = "chat"
+quota_kind = "unknown"
+
+[providers.ollama]
+type = "generic"
+base_url = "http://127.0.0.1:11434/v1"
+wire_api = "chat"
+quota_kind = "unlimited_local"
+supports_reasoning = false
