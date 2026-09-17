@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "codex-api-provider"
+version = "0.1.0"
+description = "A quota-aware multi-provider Responses API gateway for Codex and Codex Auto Router"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Darren" }]
+dependencies = [
+  "fastapi>=0.115,<1",
+  "httpx>=0.27,<1",
+  "uvicorn>=0.30,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.2,<9", "pytest-asyncio>=0.24,<1"]
+
+[project.scripts]
+codex-api-provider = "codex_api_provider.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/codex_api_provider"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+asyncio_mode = "auto"
