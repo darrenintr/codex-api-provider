@@ -9,7 +9,7 @@ Official GPT/Codex entitlement routing can stay on the normal Codex path. Extern
 - `POST /v1/responses`
 - Native Responses passthrough for Responses-compatible providers such as OpenRouter/xAI
 - Responses ↔ Chat Completions translation for OpenAI-compatible providers
-- Streaming text bridge for Chat Completions backends
+- Streaming text + function-tool bridge for Chat Completions backends
 - `GET /v1/models`
 - `GET /router/providers`
 - `GET /router/models`
@@ -20,12 +20,12 @@ Official GPT/Codex entitlement routing can stay on the normal Codex path. Extern
 - Persistent local input/cached/output/reasoning token accounting
 - Built-in presets for OpenRouter, DeepSeek, Groq, Anthropic, Gemini, xAI, Mistral, Cerebras, Together, Fireworks, NVIDIA NIM, SiliconFlow, DashScope and Ollama
 
-The gateway never fabricates a single `remaining_tokens` value when a provider does not expose one. Capacity records label data as `exact`, `observed`, `estimated`, or `unknown`.
+The gateway never fabricates a single `remaining_tokens` value when a provider does not expose one. Capacity records label data as `exact`, `observed`, `estimated`, or `unknown`.\n\nFor Chat-Completions compatibility backends, standard function tools are translated to/from Responses items, including streaming tool-call deltas. Native Responses providers are still preferred when you need provider-specific Responses features such as custom/freeform or namespace tools.
 
 ## Install
 
 ```bash
-pipx install git+https://github.com/darrenintr/codex-api-provider.git@feat/v0.1-provider-gateway
+pipx install git+https://github.com/darrenintr/codex-api-provider.git
 codex-api-provider init
 ```
 
