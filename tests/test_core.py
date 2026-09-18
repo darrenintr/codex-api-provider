@@ -5,7 +5,7 @@ from codex_api_provider.gateway import ModelReferenceError, split_model_referenc
 from codex_api_provider.providers import build_providers
 from codex_api_provider.providers.rate_headers import RateHeaderProvider
 from codex_api_provider.state import StateStore, UsageDelta
-from codex_api_provider.translation import chat_to_response, responses_to_chat
+from codex_api_provider.translation import (\n    chat_to_response,\n    chat_tool_call_items,\n    merge_chat_tool_call_deltas,\n    responses_to_chat,\n)
 
 
 def _providers(tmp_path: Path):
@@ -79,3 +79,39 @@ async def test_observed_capacity(tmp_path: Path):
     assert capacity.token.remaining == 17997
     assert capacity.token.accuracy == "observed"
     assert capacity.requests.remaining == 14370
+
+
+def test_streaming_chat_tool_calls_are_reassembled_for_codex():
+    state: dict[int, dict[str, str]] = {}
+    merge_chat_tool_call_deltas(
+        state,
+        [
+            {
+                "index": 0,
+                "id": "call_shell_1",
+                "type": "function",
+                "function": {"name": "shell", "arguments": "{\"cmd\":\""},
+            }
+        ],
+    )
+    merge_chat_tool_call_deltas(
+        state,
+        [
+            {
+                "index": 0,
+                "function": {"arguments": "pwd\"}"},
+            }
+        ],
+    )
+    items = chat_tool_call_items(state)
+    assert items == [
+        {
+            "id": items[0]["id"],
+            "type": "function_call",
+            "status": "completed",
+            "call_id": "call_shell_1",
+            "name": "shell",
+            "arguments": "{\"cmd\":\"pwd\"}",
+        }
+    ]
+    assert items[0]["id"].startswith("fc_")
